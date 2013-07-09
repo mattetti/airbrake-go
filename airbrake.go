@@ -18,6 +18,8 @@ var (
 	Endpoint    = "https://api.airbrake.io/notifier_api/v2/notices"
 	Environment = "development"
 	Verbose     = false
+  // Increase this value if you nest your aibrake calls
+  DefaultStackTraceSkip = 3
 
 	badResponse   = errors.New("Bad response")
 	apiKeyMissing = errors.New("Please set the airbrake.ApiKey before doing calls")
@@ -140,7 +142,7 @@ func Error(e error, request *http.Request) error {
 		params["Pwd"] = pwd
 	}
 
-	params["Backtrace"] = stacktrace(3)
+	params["Backtrace"] = stacktrace(DefaultStackTraceSkip)
 
 	post(params)
 
@@ -178,7 +180,7 @@ func Notify(e error) error {
 		params["Hostname"] = hostname
 	}
 
-	params["Backtrace"] = stacktrace(3)
+	params["Backtrace"] = stacktrace(DefaultStackTraceSkip)
 
 	post(params)
 	return nil
